@@ -1,0 +1,195 @@
+p {
+    font-size: 20px;
+    font-weight: bold;
+    em {
+        background: yellow;
+        padding: 5px;
+    }
+}
+
+svg {
+    pointer-events: none;
+}
+
+.glyph {
+    cursor: pointer;
+    pointer-events: visiblePainted;
+}
+
+.leaflet-container, svg {
+    cursor: default;
+}
+
+// Leaflet overrides for cleaner look
+.leaflet-container {
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+    background: #f8f9fa;
+}
+
+.leaflet-control-attribution {
+    font-size: 9px;
+    opacity: 0.6;
+    background: rgba(255, 255, 255, 0.7) !important;
+    padding: 2px 6px;
+    a {
+        color: #666;
+    }
+}
+
+.leaflet-control-scale-line {
+    border-color: rgba(0, 0, 0, 0.3);
+    font-size: 9px;
+    color: #555;
+    background: rgba(255, 255, 255, 0.6);
+}
+
+// Pin styling
+.pin path {
+    stroke: #666;
+    stroke-width: 0.5px;
+    fill: #4A90D9;
+    transition: fill 0.15s ease, stroke 0.15s ease;
+}
+
+.pin.dirty path {
+    fill: #E67E22;
+}
+
+.pin.invalid path {
+    fill: #BDC3C7;
+}
+
+.pin path:hover {
+    stroke: #2C3E50;
+    stroke-width: 1px;
+    fill: #3498DB;
+}
+
+// Flow line styling
+svg .flow {
+    cursor: pointer;
+    opacity: 0.85;
+    transition: opacity 0.15s ease;
+    &:hover {
+        opacity: 1;
+    }
+}
+
+// Tooltip styling
+.tip {
+    pointer-events: none;
+    position: absolute;
+    display: flex;
+    z-index: 1000;
+    .arrow {
+        width: 0px;
+        height: 0px;
+        border-style: solid;
+        border-width: 7px;
+        border-color: transparent;
+    }
+    .content-wrap {
+        padding: 8px 10px;
+        font-size: 11px;
+        font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 4px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        border: 1px solid rgba(0, 0, 0, 0.08);
+    }
+}
+
+.tip.top {
+    flex-direction: column-reverse;
+}
+
+.tip.bottom {
+    flex-direction: column;
+}
+
+.tip.left {
+    flex-direction: row-reverse;
+}
+
+.tip.right {
+    flex-direction: row;
+}
+
+// Warning panel
+.war {
+    pointer-events: none;
+    font-size: 11px;
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    .header {
+        font-weight: 600;
+        padding-bottom: 4px;
+        font-size: 12px;
+        color: #C0392B;
+    }
+    .row {
+        display: table-row;
+    }
+    .sect {
+        display: table-cell;
+        text-transform: uppercase;
+        padding-right: 10px;
+        max-width: 200px;
+        color: #7F8C8D;
+        font-size: 10px;
+    }
+    .value {
+        display: table-cell;
+        max-width: 260px;
+        color: #2C3E50;
+    }
+}
+
+// Info/Legend panel
+.info {
+    pointer-events: none;
+    font-size: 11px;
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    .header {
+        font-weight: 600;
+        padding-left: 1px;
+        padding-bottom: 5px;
+        max-width: 240px;
+        letter-spacing: 0.5px;
+        word-wrap: break-word;
+        color: #2C3E50;
+    }
+    .row {
+        display: table-row;
+    }
+    .cell {
+        display: table-cell;
+        max-width: 240px;
+        vertical-align: middle;
+        padding-top: 2px;
+        padding-bottom: 2px;
+    }
+    .color {
+        max-width: 13px;
+        padding: 1px 5px 1px 0px;
+        svg {
+            height: 14px;
+        }
+    }
+    .title {
+        font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+        text-transform: uppercase;
+        padding-top: 3px;
+        padding-right: 12px;
+        font-size: 10px;
+        color: #7F8C8D;
+        letter-spacing: 0.3px;
+    }
+    .value {
+        font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+        font-weight: 600;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        color: #2C3E50;
+    }
+}

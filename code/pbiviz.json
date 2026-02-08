@@ -1,0 +1,25 @@
+{
+    "visual": {
+        "name": "flowmap",
+        "displayName": "Flow Map - DSGooseFix",
+        "guid": "flowmap30CFDD5B92F848C88242B1E81C8C33C7",
+        "visualClassName": "Visual",
+        "version": "2.0.0",
+        "description": "Flowmap visualizes movement between locations using OpenStreetMap. Forked & fixed by DSGoose.",
+        "supportUrl": "https://github.com/nickhung-dsgoose/PowerBI-FlowMap-DSGooseFix/",
+        "gitHubUrl": "https://github.com/nickhung-dsgoose/PowerBI-FlowMap-DSGooseFix/"
+      },
+    "apiVersion": "2.6.0",
+    "author": {
+        "name": "DSGoose (Hung)",
+        "email": "hung.dscat@gmail.com"
+    },
+    "assets": {
+        "icon": "assets/icon.png"
+    },
+    "externalJS": ["./src/global.js"],
+    "style": "style/visual.less",
+    "capabilities": "capabilities.json",
+    "dependencies": null,
+    "stringResources": []
+}
