@@ -2,7 +2,7 @@
     "visual": {
         "name": "flowmap",
         "displayName": "Flow Map - DSGooseFix",
-        "guid": "flowmap30CFDD5B92F848C88242B1E81C8C33C7",
+        "guid": "flowmapDSGoose3b8ED68d034ED4cb80c7",
         "visualClassName": "Visual",
         "version": "2.0.0.0",
         "description": "Flowmap visualizes movement between locations using OpenStreetMap. Forked & fixed by DSGoose.",
