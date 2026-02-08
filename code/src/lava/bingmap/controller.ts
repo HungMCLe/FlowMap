@@ -1,3 +1,9 @@
+import { LEAFLET_CSS } from './leaflet-css';
+
+// Leaflet is loaded via require() and assigned to window.L for internal use
+declare var L: any;
+declare var require: any;
+const leafletLib = require('leaflet');
 import { ILocation, IBound } from './converter';
 import { anchorPixel, bound, anchor, fitOptions, area } from './converter';
 import { keys, IPoint, partial } from '../type';
@@ -117,8 +123,6 @@ const LABEL_URLS = {
 
 const TILE_ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/">CARTO</a>';
 
-declare var L: any;
-
 export class Controller {
   private _div: HTMLDivElement;
   private _map: any; // Leaflet map instance
@@ -127,7 +131,8 @@ export class Controller {
   private _svgroot: ISelex;
   private _tileLayer: any;
   private _labelLayer: any;
-  private _leafletLoaded: boolean = false;
+  private _leafletReady: boolean = false;
+  private _leafletCssInjected: boolean = false;
 
   public get map() { return this._map; }
 
@@ -351,13 +356,11 @@ export class Controller {
       return this;
     }
 
-    if (!this._leafletLoaded) {
-      // Load Leaflet CSS and JS
-      this._loadLeaflet(() => {
-        this._leafletLoaded = true;
-        this._initMap();
-        then(this._map);
-      });
+    if (!this._leafletReady) {
+      this._setupLeaflet();
+      this._leafletReady = true;
+      this._initMap();
+      then(this._map);
       return this;
     }
 
@@ -410,37 +413,16 @@ export class Controller {
     return this;
   }
 
-  private _loadLeaflet(callback: () => void): void {
-    // Check if Leaflet is already loaded
-    if (typeof L !== 'undefined') {
-      callback();
-      return;
+  private _setupLeaflet(): void {
+    if (this._leafletCssInjected) return;
+    this._leafletCssInjected = true;
+    // Make Leaflet available globally (needed by Leaflet internals)
+    if (typeof window !== 'undefined') {
+      (window as any).L = leafletLib;
     }
-
-    // Load Leaflet CSS
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
-    link.integrity = 'sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=';
-    link.crossOrigin = '';
-    document.head.appendChild(link);
-
-    // Load Leaflet JS
-    const script = document.createElement('script');
-    script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
-    script.integrity = 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=';
-    script.crossOrigin = '';
-    script.onload = () => {
-      callback();
-    };
-    script.onerror = () => {
-      console.error('Failed to load Leaflet. Retrying without integrity check...');
-      // Fallback: try without integrity
-      const fallback = document.createElement('script');
-      fallback.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
-      fallback.onload = () => callback();
-      document.head.appendChild(fallback);
-    };
-    document.head.appendChild(script);
+    // Inject Leaflet CSS inline since Power BI sandboxed iframe blocks external CSS loading
+    const style = document.createElement('style');
+    style.textContent = LEAFLET_CSS;
+    document.head.appendChild(style);
   }
 }

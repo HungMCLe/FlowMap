@@ -1126,7 +1126,9 @@ export function layout(source: IPoint, targets: IPoint[], weights?: number[]): I
             for (let t of tars) {
                 let key = t.x + ',' + t.y;
                 while (key in mark) {
+                    // eslint-disable-next-line powerbi-visuals/insecure-random
                     t.x += smallx * Math.random();
+                    // eslint-disable-next-line powerbi-visuals/insecure-random
                     t.y += smally * Math.random();
                     key = t.x + ',' + t.y;
                 }

@@ -130,10 +130,10 @@ class VisualFlow {
 
 export function init(d3: ISelex): IListener {
     const rect = d3.append('rect');
-    const remask = () => rect.att.width($state.mapctl.map.getWidth())
-        .att.height($state.mapctl.map.getHeight())
-        .att.x(0 - $state.mapctl.map.getWidth() / 2)
-        .att.y(0 - $state.mapctl.map.getHeight() / 2)
+    const remask = () => rect.att.width($state.mapctl.map.getContainer().clientWidth)
+        .att.height($state.mapctl.map.getContainer().clientHeight)
+        .att.x(0 - $state.mapctl.map.getContainer().clientWidth / 2)
+        .att.y(0 - $state.mapctl.map.getContainer().clientHeight / 2)
         .att.fill_opacity(0.01)
         .sty.pointer_events('none');
     root = d3.append('g');

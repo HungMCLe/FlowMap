@@ -1,0 +1,21 @@
+Origin,Destination,OLati,OLong,DLati,DLong,Width,Color
+New York,London,40.7128,-74.0060,51.5074,-0.1278,500,Trade
+New York,Paris,40.7128,-74.0060,48.8566,2.3522,320,Trade
+New York,Tokyo,40.7128,-74.0060,35.6762,139.6503,410,Trade
+Los Angeles,Sydney,34.0522,-118.2437,-33.8688,151.2093,280,Tourism
+Los Angeles,Tokyo,34.0522,-118.2437,35.6762,139.6503,350,Trade
+Chicago,London,41.8781,-87.6298,51.5074,-0.1278,200,Trade
+Chicago,Berlin,41.8781,-87.6298,52.5200,13.4050,150,Trade
+San Francisco,Shanghai,37.7749,-122.4194,31.2304,121.4737,300,Trade
+San Francisco,Seoul,37.7749,-122.4194,37.5665,126.9780,220,Technology
+Miami,Sao Paulo,25.7617,-80.1918,-23.5505,-46.6333,270,Tourism
+Miami,Mexico City,25.7617,-80.1918,19.4326,-99.1332,310,Tourism
+Houston,Dubai,29.7604,-95.3698,25.2048,55.2708,400,Energy
+Houston,London,29.7604,-95.3698,51.5074,-0.1278,350,Energy
+Seattle,Tokyo,47.6062,-122.3321,35.6762,139.6503,290,Technology
+Seattle,Bangalore,47.6062,-122.3321,12.9716,77.5946,260,Technology
+Boston,London,42.3601,-71.0589,51.5074,-0.1278,180,Education
+Boston,Toronto,42.3601,-71.0589,43.6532,-79.3832,150,Education
+Dallas,Frankfurt,32.7767,-96.7970,50.1109,8.6821,230,Trade
+Atlanta,Amsterdam,33.7490,-84.3880,52.3676,4.9041,190,Trade
+Denver,Paris,39.7392,-104.9903,48.8566,2.3522,140,Tourism
