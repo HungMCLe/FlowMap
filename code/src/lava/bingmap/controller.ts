@@ -125,6 +125,7 @@ const TILE_ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyrigh
 
 export class Controller {
   private _div: HTMLDivElement;
+  private _mapDiv: HTMLDivElement;
   private _map: any; // Leaflet map instance
   private _fmt: IMapFormat;
   private _svg: ISelex;
@@ -133,6 +134,8 @@ export class Controller {
   private _labelLayer: any;
   private _leafletReady: boolean = false;
   private _leafletCssInjected: boolean = false;
+  private _prevCenter: any;
+  private _prevZoom: number;
 
   public get map() { return this._map; }
 
@@ -214,30 +217,66 @@ export class Controller {
   }
 
   private _initMap(): void {
-    // Clear any existing map content
-    const existingMapDivs = this._div.querySelectorAll('.leaflet-container');
-    existingMapDivs.forEach(d => d.remove());
-
-    // Create a new div for the Leaflet map
-    const mapDiv = document.createElement('div');
-    mapDiv.style.width = '100%';
-    mapDiv.style.height = '100%';
-    mapDiv.style.position = 'absolute';
-    mapDiv.style.top = '0';
-    mapDiv.style.left = '0';
-    this._div.insertBefore(mapDiv, this._div.firstChild);
-
-    const center = this._map ? this._map.getCenter() : { lat: 0, lng: 0 };
-    const zoom = this._map ? this._map.getZoom() : 2;
-
-    // Remove old map if exists
-    if (this._map) {
-      try { this._map.remove(); } catch (e) { /* ignore */ }
+    // Ensure parent div has position for absolute children
+    if (this._div.style.position !== 'absolute' && this._div.style.position !== 'relative') {
+      this._div.style.position = 'relative';
     }
 
-    this._map = L.map(mapDiv, {
-      center: [center.lat || 0, center.lng || 0],
-      zoom: zoom || 2,
+    // Remove existing Leaflet map if present
+    if (this._map) {
+      const center = this._map.getCenter();
+      const zoom = this._map.getZoom();
+      try { this._map.remove(); } catch (e) { /* ignore */ }
+      this._prevCenter = center;
+      this._prevZoom = zoom;
+    }
+
+    // Remove any old map divs
+    if (this._mapDiv && this._mapDiv.parentNode) {
+      this._mapDiv.parentNode.removeChild(this._mapDiv);
+    }
+
+    // Create a new div for the Leaflet map
+    this._mapDiv = document.createElement('div');
+    this._mapDiv.style.width = '100%';
+    this._mapDiv.style.height = '100%';
+    this._mapDiv.style.position = 'absolute';
+    this._mapDiv.style.top = '0';
+    this._mapDiv.style.left = '0';
+    this._mapDiv.style.zIndex = '0';
+    // Insert map div as first child (below canvas/svg)
+    this._div.insertBefore(this._mapDiv, this._div.firstChild);
+
+    // Ensure SVG and canvas sit above the map
+    const svgNode = this._svg ? this._svg.node() : null;
+    const canvasNode = this._canvas ? this._canvas.node() : null;
+    if (svgNode) {
+      svgNode.style.zIndex = '2';
+      svgNode.style.position = 'absolute';
+      svgNode.style.top = '0';
+      svgNode.style.left = '0';
+    }
+    if (canvasNode) {
+      canvasNode.style.zIndex = '1';
+      canvasNode.style.position = 'absolute';
+      canvasNode.style.top = '0';
+      canvasNode.style.left = '0';
+    }
+
+    // Re-append SVG/canvas to _div so they stay as siblings, not inside Leaflet panes
+    if (canvasNode && canvasNode.parentNode !== this._div) {
+      this._div.appendChild(canvasNode);
+    }
+    if (svgNode && svgNode.parentNode !== this._div) {
+      this._div.appendChild(svgNode);
+    }
+
+    const prevCenter = this._prevCenter || { lat: 0, lng: 0 };
+    const prevZoom = this._prevZoom || 2;
+
+    this._map = L.map(this._mapDiv, {
+      center: [prevCenter.lat || 0, prevCenter.lng || 0],
+      zoom: prevZoom || 2,
       zoomControl: false,
       attributionControl: false,
       dragging: this._fmt.pan !== false,
@@ -260,17 +299,18 @@ export class Controller {
     // Set tile layer based on map type
     this._updateTileLayer();
 
-    // Re-attach SVG and Canvas overlays
-    const mapContainer = this._map.getContainer();
-    const pane = this._map.getPane('overlayPane') || mapContainer;
-    if (this._canvas) pane.appendChild(this._canvas.node());
-    if (this._svg) pane.appendChild(this._svg.node());
-
     // Wire up events
     this._map.on('move', () => this._viewChange(false));
     this._map.on('moveend', () => this._viewChange(true));
     this._map.on('zoomend', () => this._viewChange(true));
     this._map.on('resize', () => this._resize());
+
+    // Force invalidate map size after a short delay (Power BI container may not be ready)
+    setTimeout(() => {
+      if (this._map) {
+        this._map.invalidateSize();
+      }
+    }, 100);
 
     if (!this._zoom) {
       this._resize();
